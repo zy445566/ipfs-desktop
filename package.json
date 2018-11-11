@@ -1,0 +1,29 @@
+{
+  "name": "ipfs-desktop",
+  "version": "1.0.0",
+  "description": "ipfs desktop",
+  "main": "index.js",
+  "scripts": {
+    "dev": "electron . dev",
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zy445566/ipfs-desktop.git"
+  },
+  "keywords": [
+    "ipfs",
+    "desktop",
+    "electron"
+  ],
+  "author": "zy445566",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zy445566/ipfs-desktop/issues"
+  },
+  "homepage": "https://github.com/zy445566/ipfs-desktop#readme",
+  "devDependencies": {
+    "electron": "^3.0.8"
+  }
+}

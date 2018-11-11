@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html>
     <meta charset="UTF-8">
-    <title>IPFS Desktop Loading...</title>
+    <title>IPFS Desktop Loading</title>
     <body style="background-color: black;">
         <span style="color: white;" id="showStr"></span>
     </body>
 <script>
-let indexModule = require('../module/index.js');
-let showLikeCommand = require('../util/showLikeCommand.js');
-let showSpan = document.getElementById("showStr");
-showLikeCommand(showSpan,indexModule.getInit());
+(async ()=>{
+    let indexModule = require('../module/index.js');
+    let showLikeCommand = require('../util/showLikeCommand.js');
+    let titleDom = document.getElementsByTagName("title")[0];
+    showLikeCommand(titleDom, '...',true,false,500);
+    let showSpanDom = document.getElementById("showStr");
+    await showLikeCommand(showSpanDom, indexModule.getInit());
+})();
 </script>
 </html>

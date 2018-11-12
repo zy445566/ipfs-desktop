@@ -18,11 +18,13 @@ module.exports = class Index {
                 write(chunk, encoding, callback) {
                     outStr += chunk.toString();
                     if(outStr.indexOf('Daemon is ready')>-1){
-                        reslove(outStr + execSync(`${appInfo.ipfs_file_path} config Addresses.API`).toString())
+                        return reslove(outStr + execSync(`${appInfo.ipfs_file_path} config Addresses.API`).toString())
                     }
                     let runningStr = 'ipfs daemon is running';
                     if (outStr.indexOf(runningStr)>-1) {
-                        reslove(runningStr +os.EOL+ execSync(`${appInfo.ipfs_file_path} config Addresses.API`).toString())
+                        return reslove(runningStr +os.EOL+ execSync(`${appInfo.ipfs_file_path} config Addresses.API`).toString())
+                    } else {
+                        return reslove(outStr)
                     }
                     callback();
                 }

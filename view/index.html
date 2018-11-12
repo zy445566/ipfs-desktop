@@ -21,7 +21,6 @@
     let  addressApiRows = addressApi.split(/[\n\r]+/);
     let addressApiList = addressApiRows[addressApiRows.length-2].split('/');
     await showLikeCommand(showSpanDom, addressApi);
-    console.log(`http://${addressApiList[2]}:${addressApiList[4]}/webui/`)
     ipcRenderer.sendSync('change-win', `http://${addressApiList[2]}:${addressApiList[4]}/webui/`)
 })();
 </script>

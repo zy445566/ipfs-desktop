@@ -1,7 +1,7 @@
 const appInfo = require('../util/getAppInfo');
 const { exec, execSync } = require('child_process');
 const { Writable } = require('stream');
-const fs = require('fs');
+const os = require('os');
 
 module.exports = class Index {
     static outputInit() {
@@ -13,11 +13,18 @@ module.exports = class Index {
     }
     static outputDaemon() {
         return new Promise ((reslove,reject)=>{
+            let outStr = '';
             let writeStream = new Writable({
                 write(chunk, encoding, callback) {
-                    let outStr = chunk.toString();
-                    if(outStr.indexOf('Daemon is ready') || outStr.indexOf('ipfs daemon is running')){
-                        reslove(execSync(`${appInfo.ipfs_file_path} config Addresses.API`).toString())
+                    outStr += chunk.toString();
+                    if(outStr.indexOf('Daemon is ready')>-1){
+                        console.log(11111,outStr)
+                        reslove(outStr + execSync(`${appInfo.ipfs_file_path} config Addresses.API`).toString())
+                    }
+                    let runningStr = 'ipfs daemon is running';
+                    if (outStr.indexOf(runningStr)>-1) {
+                        console.log(22222,outStr)
+                        reslove(runningStr +os.EOL+ execSync(`${appInfo.ipfs_file_path} config Addresses.API`).toString())
                     }
                     callback();
                 }

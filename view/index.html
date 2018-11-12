@@ -23,5 +23,8 @@
     await showLikeCommand(showSpanDom, addressApi);
     ipcRenderer.sendSync('change-win', `http://${addressApiList[2]}:${addressApiList[4]}/webui/`)
 })();
+setInterval(()=>{
+    window.scrollTo(0,document.body.scrollHeight);
+},500)
 </script>
 </html>

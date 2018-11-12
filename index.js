@@ -13,6 +13,9 @@ function createWindow () {
   if (dev) {
     initWin.webContents.openDevTools();
   }
+  initWin.on('close',()=>{
+    app.quit();
+  })
   ipcMain.on('change-win', (event, arg) => {
     event.returnValue = 'done'
     initWin.hide();
@@ -22,10 +25,10 @@ function createWindow () {
       mainWin.webContents.openDevTools();
     }
     mainWin.on('close',()=>{
-      initWin.close();
+      app.quit();
     })
   })
   
 }
 
-app.on('ready', createWindow)
+app.on('ready', createWindow);

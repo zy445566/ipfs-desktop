@@ -23,8 +23,6 @@ module.exports = class Index {
                     let runningStr = 'ipfs daemon is running';
                     if (outStr.indexOf(runningStr)>-1) {
                         return reslove(runningStr +os.EOL+ execSync(`${appInfo.ipfs_file_path} config Addresses.API`).toString())
-                    } else {
-                        return reslove(outStr)
                     }
                     callback();
                 }

@@ -7,12 +7,21 @@
     </body>
 <script>
 (async ()=>{
+    const {ipcRenderer} = require('electron')
     let indexModule = require('../module/index.js');
     let showLikeCommand = require('../util/showLikeCommand.js');
     let titleDom = document.getElementsByTagName("title")[0];
     showLikeCommand(titleDom, '...',true,false,500);
     let showSpanDom = document.getElementById("showStr");
-    await showLikeCommand(showSpanDom, indexModule.getInit());
+    await showLikeCommand(showSpanDom, '$ ipfs init\n');
+    await showLikeCommand(showSpanDom, indexModule.outputInit());
+    showSpanDom.innerText = '';
+    await showLikeCommand(showSpanDom, '$ ipfs daemon\n');
+    let addressApi = await indexModule.outputDaemon();
+    let addressApiList = addressApi.replace(/[\r\n]/g,'').split('/');
+    await showLikeCommand(showSpanDom, );
+    console.log(`http://${addressApiList[2]}:${addressApiList[4]}/webui/`)
+    ipcRenderer.sendSync('change-win', `http://${addressApiList[2]}:${addressApiList[4]}/webui/`)
 })();
 </script>
 </html>

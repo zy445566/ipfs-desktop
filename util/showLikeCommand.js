@@ -2,6 +2,7 @@ module.exports = function showLikeCommand (dom,text,repeat=false,backOrgin=false
     return new Promise((reslove,reject)=>{
         let index = 0;
         let orginText = dom.innerText;
+        if (!text) return reslove(true)
         let timeInterval = setInterval(function(){
             if (text[index]==' ') {
                 if (index+1<text.length) {

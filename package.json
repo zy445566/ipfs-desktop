@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "electron . dev",
     "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,6 +26,22 @@
   },
   "homepage": "https://github.com/zy445566/ipfs-desktop#readme",
   "devDependencies": {
-    "electron": "^3.0.8"
+    "electron": "^3.0.8",
+    "electron-builder": "^20.34.0"
+  },
+  "build": {
+    "appId": "io.ipfs.desktop",
+    "mac": {
+      "target": ["dmg"],
+      "asarUnpack":["ipfs"]
+    },
+    "win": {
+      "target": ["nsis"],
+      "asarUnpack":["ipfs"]
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "asarUnpack":["ipfs"]
+    }
   }
 }

@@ -38,7 +38,7 @@
             let chunkStr = chunk.toString();
             if (chunkStr.indexOf('Error')>-1) {
                 let runningStr = 'ipfs daemon is running';
-                if (chunkStr.indexOf(runningStr)>-1 || chunkStr.indexOf('cannot not acquire lock')>-1 ) {
+                if (chunkStr.indexOf(runningStr)>-1 || chunkStr.indexOf('cannot acquire lock')>-1 ) {
                     outStr+=runningStr +os.EOL+ apiStr + execSync(`${appInfo.ipfs_file_path} config Addresses.API`).toString();
                     showLikeCommand(showSpanDom, outStr).then((res)=>{
                         changeWin();
@@ -66,6 +66,9 @@
     ipcRenderer.on('close-win', (event, arg) => {
         if (childDaemon!=null) {
             childDaemon.kill();
+            // if (process.platform=='win32') {
+            //     execSync(`taskkill /pid ${childDaemon.pid} /T /F`)
+            // }
         }
     })
 })();

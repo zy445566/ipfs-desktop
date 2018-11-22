@@ -7,7 +7,11 @@
     </body>
 <script>
 (async ()=>{
-    const {ipcRenderer} = require('electron')
+    const {ipcRenderer,app} = require('electron');
+    const { exec, execSync } = require('child_process');
+    const { Writable } = require('stream');
+    const os = require('os');
+    const appInfo = require('../util/getAppInfo');
     let indexModule = require('../module/index.js');
     let showLikeCommand = require('../util/showLikeCommand.js');
     let titleDom = document.getElementsByTagName("title")[0];
@@ -17,12 +21,49 @@
     await showLikeCommand(showSpanDom, indexModule.outputInit());
     showSpanDom.innerText = '';
     await showLikeCommand(showSpanDom, '$ ipfs daemon\n');
-    let addressApi = await indexModule.outputDaemon();
-    let  addressApiRows = addressApi.split(/[\n\r]+/);
-    let addressApiList = addressApiRows[addressApiRows.length-2].split('/');
-    await showLikeCommand(showSpanDom, addressApi);
-    ipcRenderer.sendSync('change-win', `http://${addressApiList[2]}:${addressApiList[4]}/webui/`)
+    let outStr = '';
+    function changeWin() {
+        let  addressApiRows = outStr.split(/[\n\r]+/);
+        let addressApiList = addressApiRows[addressApiRows.length-2].split('/');
+        ipcRenderer.sendSync('change-win', `http://${addressApiList[2]}:${addressApiList[4]}/webui/`)
+    }
+    let writeStream = new Writable({
+        write(chunk, encoding, callback) {
+            let chunkStr = chunk.toString();
+            if (chunkStr.indexOf('Error')>-1) {
+                let runningStr = 'ipfs daemon is running';
+                if (chunkStr.indexOf(runningStr)>-1) {
+                    outStr+=runningStr +os.EOL+ execSync(`${appInfo.ipfs_file_path} config Addresses.API`).toString();
+                    showLikeCommand(showSpanDom, outStr).then((res)=>{
+                        changeWin();
+                    });
+                } else {
+                    showLikeCommand(showSpanDom, chunkStr).then((res)=>{
+                        app.quit();
+                    })
+                }
+            } else {
+                if (chunkStr.indexOf('Daemon is ready')>-1) {
+                    showLikeCommand(showSpanDom, chunkStr).then((res)=>{
+                        changeWin();
+                    });
+                } else {
+                    outStr+=chunkStr;
+                    showLikeCommand(showSpanDom, chunkStr).then((res)=>{
+                        callback()
+                    });
+                }
+            } 
+        }
+    });
+    let childDaemon = indexModule.outputDaemon(writeStream);
+    ipcRenderer.on('close-win', (event, arg) => {
+        if (childDaemon!=null) {
+            childDaemon.kill('SIGHUP');
+        }
+    })
 })();
+
 setInterval(()=>{
     window.scrollTo(0,document.body.scrollHeight);
 },500)

@@ -1,7 +1,5 @@
 const { app, BrowserWindow,ipcMain } = require('electron')
 
-
-
 let dev = process.argv.length==3 && process.argv[2]=='dev' || false;// || true 只是在非必须下方便调试
 
 let initWin;
@@ -14,6 +12,7 @@ function createWindow () {
     initWin.webContents.openDevTools();
   }
   initWin.on('close',()=>{
+    initWin.webContents.send('close-win', 'close daemon!');
     app.quit();
   })
   ipcMain.on('change-win', (event, arg) => {
@@ -25,6 +24,7 @@ function createWindow () {
       mainWin.webContents.openDevTools();
     }
     mainWin.on('close',()=>{
+      initWin.webContents.send('close-win', 'close daemon!');
       app.quit();
     })
   })

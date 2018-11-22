@@ -1,5 +1,5 @@
 const appInfo = require('../util/getAppInfo');
-const { exec, execSync } = require('child_process');
+const { spawn, execSync } = require('child_process');
 let childDaemon = null;
 module.exports = class Index {
     static outputInit() {
@@ -11,7 +11,7 @@ module.exports = class Index {
     }
 
     static outputDaemon(writeStream) {
-        childDaemon = exec(`${appInfo.ipfs_file_path} daemon`);
+        childDaemon = spawn(appInfo.ipfs_file_path, ['daemon']);
         childDaemon.stdout.pipe(writeStream);
         childDaemon.stderr.pipe(writeStream);
         return childDaemon;

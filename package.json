@@ -1,6 +1,6 @@
 {
   "name": "ipfs-desktop",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "ipfs desktop",
   "main": "index.js",
   "scripts": {
@@ -33,15 +33,29 @@
     "appId": "io.ipfs.desktop",
     "mac": {
       "target": ["dmg"],
-      "asarUnpack":["ipfs"]
+      "asarUnpack":["ipfs"],
+      "files":[
+            "!ipfs/freebsd/*",
+            "!ipfs/linux/*",
+            "!ipfs/win32/*"
+      ]
     },
     "win": {
       "target": ["nsis"],
-      "asarUnpack":["ipfs"]
+      "asarUnpack":["ipfs"],
+      "files":[
+            "!ipfs/darwin/*",
+            "!ipfs/freebsd/*",
+            "!ipfs/linux/*"
+      ]
     },
     "linux": {
       "target": ["AppImage"],
-      "asarUnpack":["ipfs"]
+      "asarUnpack":["ipfs"],
+      "files":[
+          "!ipfs/darwin/*",
+          "!ipfs/win32/*"
+      ]
     }
   }
 }

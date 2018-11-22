@@ -22,18 +22,24 @@
     showSpanDom.innerText = '';
     await showLikeCommand(showSpanDom, '$ ipfs daemon\n');
     let outStr = '';
+    let apiStr = 'API server listening on ';
     function changeWin() {
         let  addressApiRows = outStr.split(/[\n\r]+/);
-        let addressApiList = addressApiRows[addressApiRows.length-2].split('/');
-        ipcRenderer.sendSync('change-win', `http://${addressApiList[2]}:${addressApiList[4]}/webui/`)
+        for (let thisEows of addressApiRows) {
+            if(thisEows.indexOf(apiStr)>-1) {
+                let addressApiList = thisEows.split('/');
+                ipcRenderer.sendSync('change-win', `http://${addressApiList[2]}:${addressApiList[4]}/webui/`);
+                break;
+            }
+        }
     }
     let writeStream = new Writable({
         write(chunk, encoding, callback) {
             let chunkStr = chunk.toString();
             if (chunkStr.indexOf('Error')>-1) {
                 let runningStr = 'ipfs daemon is running';
-                if (chunkStr.indexOf(runningStr)>-1) {
-                    outStr+=runningStr +os.EOL+ execSync(`${appInfo.ipfs_file_path} config Addresses.API`).toString();
+                if (chunkStr.indexOf(runningStr)>-1 || chunkStr.indexOf('cannot not acquire lock')>-1 ) {
+                    outStr+=runningStr +os.EOL+ apiStr + execSync(`${appInfo.ipfs_file_path} config Addresses.API`).toString();
                     showLikeCommand(showSpanDom, outStr).then((res)=>{
                         changeWin();
                     });
@@ -59,7 +65,7 @@
     let childDaemon = indexModule.outputDaemon(writeStream);
     ipcRenderer.on('close-win', (event, arg) => {
         if (childDaemon!=null) {
-            childDaemon.kill('SIGHUP');
+            childDaemon.kill();
         }
     })
 })();

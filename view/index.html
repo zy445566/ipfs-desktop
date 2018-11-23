@@ -8,7 +8,7 @@
 <script>
 (async ()=>{
     const {ipcRenderer,app} = require('electron');
-    const { exec, execSync } = require('child_process');
+    const { spawnSync } = require('child_process');
     const { Writable } = require('stream');
     const os = require('os');
     const appInfo = require('../util/getAppInfo');
@@ -39,7 +39,7 @@
             if (chunkStr.indexOf('Error')>-1) {
                 let runningStr = 'ipfs daemon is running';
                 if (chunkStr.indexOf(runningStr)>-1 || chunkStr.indexOf('cannot acquire lock')>-1 ) {
-                    outStr+=runningStr +os.EOL+ apiStr + execSync(`${appInfo.ipfs_file_path} config Addresses.API`).toString();
+                    outStr+=runningStr +os.EOL+ apiStr + spawnSync(appInfo.ipfs_file_path,['config','Addresses.API']).output[1].toString();
                     showLikeCommand(showSpanDom, outStr).then((res)=>{
                         changeWin();
                     });
